@@ -2,16 +2,52 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
-
-// Set the base URL using the subdomain from the .env file
-const BASE_URL = `https://${process.env.ZENDESK_SUBDOMAIN}.zendesk.com/api/v2`;
-
+const cors = require('cors');
 const axios = require('axios');
 
-// Serve static files (e.g., CSS, JS, images)
+app.use(cors());
+
+const BASE_URL = `https://${process.env.ZENDESK_SUBDOMAIN}.zendesk.com/api/v2`;
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Fetch tickets from the Zendesk API
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'iframe.html')); 
+});
+
+async function fetchHanaData(ticketId) {
+    console.log(`Fetching data from HANA by ticket ID: ${ticketId}`);
+    try {
+        const response = await axios.get(`${BASE_URL}/tickets/${ticketId}/audits.json`, {
+            auth: {
+                username: process.env.EMAIL,
+                password: process.env.API_TOKEN
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error retrieving data:', error);
+        res.status(500).json({ error: "Error retrieving data" }); 
+    }
+    // return { ticketId: ticketId, data: "Data from Hana DB" };
+}
+
+app.get('/getTicketData', async (req, res) => {
+    console.log("A", req.query.ticket_id)
+    const ticketId = req.query.ticket_id;
+    if (!ticketId) {
+        return res.status(400).json({ error: "ticket_id is required" });
+    }
+    try {
+        const hanaData = await fetchHanaData(ticketId);
+        res.json(hanaData);
+    } catch (error) {
+        console.error('Error retrieving data:', error);
+        res.status(500).json({ error: "Error retrieving data" });
+    }
+});
+
 async function getTickets() {
     try {
         const response = await axios.get(`${BASE_URL}/tickets.json`, {
@@ -26,20 +62,19 @@ async function getTickets() {
     }
 }
 
-// Route to serve the sidebar page with the button
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'iframe.html')); // Make sure your HTML file is named 'index.html'
+    res.sendFile(path.join(__dirname, 'iframe.html')); 
 });
 
-// Route to handle the Zendesk API call
 app.get('/tickets', async (req, res) => {
     try {
         const tickets = await getTickets();
-        res.json(tickets); // Return the fetched tickets as JSON
+        res.json(tickets);
     } catch (error) {
         res.status(500).send('Error retrieving tickets');
     }
 });
+
 
 // Start the server
 app.listen(8080, () => {

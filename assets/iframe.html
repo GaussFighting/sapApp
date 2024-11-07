@@ -4,23 +4,24 @@
   <meta charset="utf-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!--   See Using Zendesk Garden:
-    https://developer.zendesk.com/apps/docs/developer-guide/setup#using-zendesk-garden
-    https://garden.zendesk.com/css-components/bedrock/
-    https://garden.zendesk.com/css-components/utilities/typography/
-   -->
 </head>
 <body>
   <h2 class="u-semibold u-fs-xl">Zendesk test App</h2>
   <script src="./server.js"></script>
   <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
   <script>
-    // Initialise Apps framework client. See also:
-    // https://developer.zendesk.com/apps/docs/developer-guide/getting_started
+    
     var client = ZAFClient.init();
+
+    client.get('ticket.id').then(function(data) {
+      let ticketId = data['ticket.id'];
+      console.log('ticketId:', ticketId, "client:", client);
+      document.getElementById('ticketDataBtn').setAttribute('href', `/getTicketData?ticket_id=${ticketId}`)
+    });
+
     client.invoke('resize', { width: '100%', height: '200px' });
   </script>
-  <a class="btn btn-primary w-100" href="/tickets" role="button">List tickets</a>
+  <a class="btn btn-primary w-100 my-2" href="/tickets" role="button">List tickets</a>
+  <a id="ticketDataBtn" class="btn btn-warning w-100 my-2" href="/getTicketData" role="button">Ticket ID</a>
 </body>
 </html>

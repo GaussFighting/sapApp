@@ -19,9 +19,12 @@
       document.getElementById('ticketDataBtn').setAttribute('href', `/getTicketData?ticket_id=${ticketId}`)
     });
 
-    client.invoke('resize', { width: '100%', height: '200px' });
+    client.invoke('resize', { width: '100%', height: '600px' });
   </script>
-  <a class="btn btn-primary w-100 my-2" href="/tickets" role="button">List tickets</a>
-  <a id="ticketDataBtn" class="btn btn-warning w-100 my-2" href="/getTicketData" role="button">Ticket ID</a>
+  <a class="btn btn-primary w-100 my-2" href="/tickets" role="button">Zlecenie sprzedaży</a>
+  <a id="ticketDataBtn" class="btn btn-warning w-100 my-2" href="/getTicketData" role="button">Pozostale zlecenia klienta</a>
+  <a id="ticketDataBtn" class="btn btn-success w-100 my-2" href="/getTicketData" role="button">Informacje o wysyłce</a>
+  <a id="ticketDataBtn" class="btn btn-danger w-100 my-2" href="/getTicketData" role="button">Fakury</a>
+  <a id="ticketDataBtn" class="btn btn-dark w-100 my-2" href="/getTicketData" role="button">Informacje o kliencie</a>
 </body>
 </html>

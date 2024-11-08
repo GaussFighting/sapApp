@@ -58,7 +58,10 @@ async function getTickets() {
         });
         return response.data;
     } catch (error) {
-        console.error('Error fetching tickets:', error);
+        const msg = `${error_msg}`
+        const client = ZAFClient.init()
+        client.invoke("notify", msg, "error")
+        console.error('Error fetching tickets:', msg);
     }
 }
 

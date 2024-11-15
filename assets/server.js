@@ -7,6 +7,7 @@ const axios = require("axios");
 
 app.use(cors());
 
+console.log("test");
 const BASE_URL = `https://${process.env.ZENDESK_SUBDOMAIN}.zendesk.com/api/v2`;
 
 app.use(express.static(path.join(__dirname, "public")));

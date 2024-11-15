@@ -1,30 +1,89 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-  <h2 class="u-semibold u-fs-xl">Zendesk test App</h2>
-  <script src="./server.js"></script>
-  <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
-  <script>
-    
-    var client = ZAFClient.init();
+  <head>
+    <meta charset="utf-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h2 class="u-semibold u-fs-xl">Zendesk test App</h2>
+    <script src="./server.js"></script>
+    <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
 
-    client.get('ticket.id').then(function(data) {
-      let ticketId = data['ticket.id'];
-      console.log('ticketId:', ticketId, "client:", client);
-      document.getElementById('ticketDataBtn').setAttribute('href', `/getTicketData?ticket_id=${ticketId}`)
-    });
+    <script>
+      var client = ZAFClient.init();
 
-    client.invoke('resize', { width: '100%', height: '600px' });
-  </script>
-  <a class="btn btn-primary w-100 my-2" href="/tickets" role="button">Zlecenie sprzedaży</a>
-  <a id="ticketDataBtn" class="btn btn-warning w-100 my-2" href="/getTicketData" role="button">Pozostale zlecenia klienta</a>
-  <a id="ticketDataBtn" class="btn btn-success w-100 my-2" href="/getTicketData" role="button">Informacje o wysyłce</a>
-  <a id="ticketDataBtn" class="btn btn-danger w-100 my-2" href="/getTicketData" role="button">Fakury</a>
-  <a id="ticketDataBtn" class="btn btn-dark w-100 my-2" href="/getTicketData" role="button">Informacje o kliencie</a>
-</body>
+      client.get("ticket.id").then(function (data) {
+        let ticketId = data["ticket.id"];
+        console.log("ticketId:", ticketId);
+        console.log("sending POST request");
+        const externalUrl = `https://dashing-churros-ab5aaa.netlify.app/?ticket_id=${ticketId}`;
+        document
+          .getElementById("externalPageBtn")
+          .setAttribute("href", externalUrl);
+
+        fetch(
+          `https://dashing-churros-ab5aaa.netlify.app/.netlify/functions/receive-ticket-id`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Methods": "POST, OPTIONS",
+              "Access-Control-Allow-Headers": "Content-Type",
+            },
+            body: JSON.stringify({ ticketId: ticketId }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Response:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+
+      client.invoke("resize", { width: "100%", height: "600px" });
+    </script>
+    <a
+      id="externalPageBtn"
+      class="btn btn-primary w-100 my-2"
+      href="#"
+      role="button"
+      >Przejdź do strony z danymi</a
+    >
+    <a class="btn btn-primary w-100 my-2" href="#" role="button"
+      >Zlecenie sprzedaży</a
+    >
+    <a
+      id="ticketDataBtn"
+      class="btn btn-warning w-100 my-2"
+      href="#"
+      role="button"
+      >Pozostale zlecenia klienta</a
+    >
+    <a
+      id="ticketDataBtn"
+      class="btn btn-success w-100 my-2"
+      href="#"
+      role="button"
+      >Informacje o wysyłce</a
+    >
+    <a
+      id="ticketDataBtn"
+      class="btn btn-danger w-100 my-2"
+      href="#"
+      role="button"
+      >Fakury</a
+    >
+    <a id="ticketDataBtn" class="btn btn-dark w-100 my-2" href="#" role="button"
+      >Informacje o kliencie</a
+    >
+  </body>
 </html>

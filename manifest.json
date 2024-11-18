@@ -10,10 +10,13 @@
   "location": {
     "support": {
       "ticket_sidebar": {
-        "url": "http://localhost:8080/",
+        "url": "assets/iframe.html",
         "flexible": true
       }
     }
+  },
+  "requirements": {
+    "domains": ["https://dashing-churros-ab5aaa.netlify.app"]
   },
   "version": "1.0.0",
   "frameworkVersion": "2.0"

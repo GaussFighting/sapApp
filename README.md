@@ -1,14 +1,10 @@
-# App name
+# Sap Connect
 
-[brief description of the app]
+[Basic Zendesk App for fetching ticket ID, connected with external app]
 
 ### The following information is displayed:
 
-* info1
-* info2
-* info3
+- Ticket ID
+- Iframe with external app
 
-Please submit bug reports to [Insert Link](). Pull requests are welcome.
-
-### Screenshot(s):
-[put your screenshots down here.]
+Please submit bug reports to [krzysztof.kowerczyk@gmail.com](). Pull requests are welcome.
